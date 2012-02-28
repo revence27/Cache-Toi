@@ -26,7 +26,7 @@ It requires that every class (usually a RequestHandler child) that implements it
 Examples:
 ---------
 
-This is a standard blog's code, for the front page:
+This is a standard blog’s code, for the front page:
 
     class FrontPage(webapp2.RequestHandler):
       def get(self):
@@ -35,7 +35,7 @@ This is a standard blog's code, for the front page:
 
 The problem is that, even after I have just ordered for that page, I will have it all sent over again if I so much as reload the page before anything has changed.
 
-This is a standard blog's code, for the front page, with Cache-Toi:
+This is a standard blog’s code, for the front page, with Cache-Toi:
 
     import cachetoi
 
