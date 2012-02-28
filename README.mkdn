@@ -28,28 +28,28 @@ Examples:
 
 This is a standard blog’s code, for the front page:
 
-    ```python
-    class FrontPage(webapp2.RequestHandler):
-      def get(self):
-        entries = Entry.all().order('-created')
-        ...
-    ```
+```python
+class FrontPage(webapp2.RequestHandler):
+  def get(self):
+  entries = Entry.all().order('-created')
+  ...
+```
 
 The problem is that, even after I have just ordered for that page, I will have it all sent over again if I so much as reload the page before anything has changed.
 
 This is a standard blog’s code, for the front page, with Cache-Toi:
 
-    ```python
-    import cachetoi
+```python
+import cachetoi
 
-    class FrontPage(webapp2.RequestHandler, cachetoi.CacheToi):
-      def latest(self):
-        return Entry.all().order('-created')[0].created
+class FrontPage(webapp2.RequestHandler, cachetoi.CacheToi):
+  def latest(self):
+    return Entry.all().order('-created')[0].created
 
-      def cached_get(self):
-        entries = Entry.all().order('-created')
-        ...
-    ```
+  def cached_get(self):
+    entries = Entry.all().order('-created')
+    ...
+```
 
 First line: you have to `import cachetoi`. 
 
