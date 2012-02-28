@@ -40,7 +40,7 @@ The problem is that, even after I have just ordered for that page, I will have i
 This is a standard blog’s code, for the front page, with Cache-Toi:
 
 ```python
-import cachetoi
+from cachetoi import cachetoi
 
 class FrontPage(webapp2.RequestHandler, cachetoi.CacheToi):
   def latest(self):
