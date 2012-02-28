@@ -33,8 +33,8 @@ class CacheToi:
     if etag == self.request.headers.get('If-None-Match'):
       self.response.set_status(304)
       return
-    if self.request.headers.get('If-None-Match'):
-      temps = self.request.headers.get('If-None-Match')
+    if self.request.headers.get('If-Modified-Since'):
+      temps = self.request.headers.get('If-Modified-Since')
       match = re.match(r'[^ ]+ (\d+) (\w+) (\d+) (\d+):(\d+):(\d+)', temps)
       if match:
         previously  = datetime(day = int(got.group(1)), month = 'Months: Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ').index(got.group(2)), year = int(got.group(3)), hour = int(got.group(4)), minute = int(got.group(5)), second = int(got.group(6)), microsecond = latest.microsecond)
