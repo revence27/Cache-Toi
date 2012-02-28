@@ -1,0 +1,62 @@
+Cache-toi !
+===========
+
+Nomenclature:
+-------------
+
+French for “Hide!”
+
+Requirements:
+-------------
+
+* The *webapp* framework (even *webapp2*), as found in Google App Engine.
+
+Introduction:
+-------------
+
+Basically, it enables your Google App Engine apps to exploit client-side caching without much effort on your part.  
+By default, no such caching support is provided by the *webapp* framework. Indeed, it even goes out of its way to ensure that client-side caching is turned off, by sending a `Cache-Control: no-cache` header. (This makes sense, if you sell bandwidth, and you have a lot of it.)
+
+However, if you are paying for out-going bandwidth—as you are, if you use GAE—it is the little things that matter. Like being able to easily tell feed aggregators to use a cached copy. These are the issues that Cache-Toi resolves.
+
+With this module imported, you have a class, `CacheToi`, which can be inherited by any odd `RequestHandler` and used as explained below.
+
+It requires that every class (usually a RequestHandler child) that implements it also provide a method called `latest`, which takes the same arguments as `get` would. This method returns the time of the last modification, as a `datetime.datetime`. If this indicates that the client has a stale version, we replace it by calling another method it implements, called `cached_get`. This method, `cached_get`, replaces `get`, and is otherwise similar in everything but a name.
+
+Examples:
+---------
+
+This is a standard blog's code, for the front page:
+
+    class FrontPage(webapp2.RequestHandler):
+      def get(self):
+        entries = Entry.all().order('-created')
+        ...
+
+The problem is that, even after I have just ordered for that page, I will have it all sent over again if I so much as reload the page before anything has changed.
+
+This is a standard blog's code, for the front page, with Cache-Toi:
+
+    import cachetoi
+
+    class FrontPage(webapp2.RequestHandler, cachetoi.CacheToi):
+      def latest(self):
+        return Entry.all().order('-created')[0].created
+
+      def cached_get(self):
+        entries = Entry.all().order('-created')
+        ...
+
+First line: you have to `import cachetoi`. 
+
+First method: `latest` returns the time the latest change was made.  
+Your code will likely use something like `.modified` and handle the case where there are no entries.
+
+Second method: `cached_get` is similar in all things to the earlier `get`, except for the name.
+
+Notes:
+------
+
+1.  This thing is much fun when you use multiple inheritance. There is nothing wrong with multiple inheritance. “It is for freedom you have been set free,” as my favourite short bald-headed man once said.
+
+2.  Things like memcache prevent undue DB access. They are internal matters. Things like Cache-Toi prevent undue sending of data. They are external matters.
