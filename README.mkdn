@@ -58,6 +58,8 @@ Your code will likely use something like `.modified` and handle the case where t
 
 Second method: `cached_get` is similar in all things to the earlier `get`, except for the name.
 
+Instead of `cached_get` you could use `get_once` and then that resource will be considered (by this caching layer) to never expire. This is fit for things like images. If it is a resource that is not going to be modified, this caching layer can deal with it simply if you use `get_once`.
+
 Notes:
 ------
 
