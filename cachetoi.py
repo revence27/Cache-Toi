@@ -4,7 +4,7 @@
 # Cache-toi !
 # French for “Hide!”
 
-from Crypto.Hash import SHA
+import sha
 from datetime import datetime
 import re
 
@@ -28,7 +28,7 @@ class CacheToi:
         self.response.set_status(304)
         return
     latest  = datetime.now() if do_once else self.latest(*args, **kwargs)
-    etag    = SHA.new(str(latest)).hexdigest()   # Rubythonic!
+    etag    = sha.new(str(latest)).hexdigest()
     self.response.headers['ETag'] = etag
     if etag == self.request.headers.get('If-None-Match'):
       self.response.set_status(304)
